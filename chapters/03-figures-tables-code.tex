@@ -1,0 +1,111 @@
+%% chapters/03-figures-tables-code.tex
+\chapter{Figures, Tables and Code}\label{chap:figures}
+
+This chapter covers floating material (figures and tables), source code and
+mathematics.
+
+\section{Figures}\label{sec:figures}
+
+Put image files in the \file{figures/} folder. Vector PDF files are
+recommended because they stay sharp at any size and are small; PNG and JPG
+also work. Thanks to \cmd{graphicspath}, only the file name is needed:
+
+\begin{lstlisting}[language={[LaTeX]TeX}]
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=\linewidth]{sample-plot}
+  \caption{A short, descriptive caption.}
+  \label{fig:sample}
+\end{figure}
+\end{lstlisting}
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=\linewidth]{sample-plot}
+  \caption{A sample plot, included from \file{figures/sample-plot.pdf}. Its
+           \LaTeX{} source is kept in \file{figures/src/}.}
+  \label{fig:sample}
+\end{figure}
+
+\Cref{fig:sample} fits the width of one column. A figure that needs more room
+can span the full page width with the starred environment, as in
+\cref{fig:wide}. In two-column mode such floats are placed at the top of a
+page.
+
+\begin{figure*}[tb]
+  \centering
+  \includegraphics[width=0.6\textwidth]{sample-plot}
+  \caption{The same plot in a \texttt{figure*} environment, which spans both
+           columns.}
+  \label{fig:wide}
+\end{figure*}
+
+\section{Tables}\label{sec:tables}
+
+Tables use the \pkg{booktabs} rules, which look better than full grids:
+horizontal lines only, and no vertical lines. The \texttt{X} column type of
+\pkg{tabularx} lets a column absorb the remaining width and wrap its text.
+
+\begin{table}[tb]
+  \centering
+  \caption{Environments provided by the template.}
+  \label{tab:environments}
+  \begin{tabularx}{\linewidth}{@{}lX@{}}
+    \toprule
+    Environment & Purpose \\
+    \midrule
+    \texttt{note}       & Supplementary information \\
+    \texttt{tip}        & Recommendations and shortcuts \\
+    \texttt{warning}    & Pitfalls and common mistakes \\
+    \texttt{definition} & Formal definitions, numbered per chapter \\
+    \texttt{example}    & Worked examples, numbered per chapter \\
+    \texttt{exercise}   & Exercises for the reader \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\Cref{tab:environments} lists the environments introduced in
+\cref{chap:writing-content}.
+
+\section{Source Code}\label{sec:code}
+
+Code is typeset with the \pkg{listings} package. Choose the language for each
+listing, and add a caption and a label to make it citable
+(\cref{lst:python}):
+
+\begin{lstlisting}[language=Python, caption={A short Python function.},
+                   label={lst:python}, numbers=left, xleftmargin=2.2em]
+def average(values):
+    """Return the arithmetic mean of a list of numbers."""
+    if not values:
+        raise ValueError("values must not be empty")
+    return sum(values) / len(values)
+
+print(average([2, 4, 6]))  # prints 4.0
+\end{lstlisting}
+
+For short fragments inside a sentence use \cmd{code}, as in
+\code|average(data)|, or \cmd{texttt} for plain monospaced text. To include
+a whole source file, use \cmd{lstinputlisting}.
+
+\begin{warning}
+The \cmd{code} command cannot be used inside the argument of another
+command, such as \cmd{section} or \cmd{footnote}. Use \cmd{texttt} there.
+\end{warning}
+
+\section{Mathematics}\label{sec:math}
+
+Inline mathematics is written between dollar signs, for example
+$a^2 + b^2 = c^2$. Numbered equations use the \texttt{equation} environment
+and can be referenced by their label, as in \cref{eq:quadratic}:
+
+\begin{equation}\label{eq:quadratic}
+  x = \frac{-b \pm \sqrt{b^{2} - 4ac}}{2a}
+\end{equation}
+
+Several aligned equations use \texttt{align}:
+
+\begin{align}
+  f(x)  &= x^2 + 1, \label{eq:f} \\
+  f'(x) &= 2x.      \label{eq:fprime}
+\end{align}

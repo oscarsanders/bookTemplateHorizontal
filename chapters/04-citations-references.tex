@@ -1,0 +1,102 @@
+%% chapters/04-citations-references.tex
+\chapter{Citations and Cross-References}\label{chap:citations}
+
+This chapter explains how to refer to other parts of the book and to external
+sources.
+
+\section{Cross-References}\label{sec:crossrefs}
+
+Give every chapter, section, figure, table, equation and listing a
+\cmd{label}, then refer to it with \cmd{cref}. The \pkg{cleveref} package
+writes the kind of object for you, so you never type \enquote{Figure} or
+\enquote{Table} by hand and the text stays correct when things are
+renumbered:
+
+\begin{lstlisting}[language={[LaTeX]TeX}]
+As \cref{fig:sample} shows, ...
+See \cref{sec:crossrefs} and \cref{tab:environments}.
+\Cref{eq:quadratic} is the quadratic formula.
+\end{lstlisting}
+
+\noindent For example: as \cref{fig:sample} shows, a plot can be referenced
+from anywhere; see \cref{sec:crossrefs} and \cref{tab:environments}.
+\Cref{eq:quadratic} is the quadratic formula. Use \cmd{Cref} with a capital C
+at the beginning of a sentence. Several references can be combined, as in
+\cref{sec:figures,sec:tables,sec:code}.
+
+Label names are free text, but a prefix keeps them organised:
+
+\begin{center}
+  \begin{tabular}{@{}ll@{\hspace{2em}}ll@{}}
+    \toprule
+    Prefix & Object & Prefix & Object \\
+    \midrule
+    \texttt{chap:} & chapter  & \texttt{tab:} & table \\
+    \texttt{sec:}  & section  & \texttt{eq:}  & equation \\
+    \texttt{fig:}  & figure   & \texttt{lst:} & listing \\
+    \bottomrule
+  \end{tabular}
+\end{center}
+
+\begin{note}
+Place \cmd{label} \emph{after} \cmd{caption} inside floats, or right after the
+sectioning command. Otherwise it may point to the wrong number.
+\end{note}
+
+\section{Citations}\label{sec:citations}
+
+Bibliographic data lives in \file{references.bib}, one entry per source. The
+key of each entry identifies it in the text. Two commands are used most:
+
+\begin{itemize}
+  \item \cmd{citep}\texttt{\{key\}} for a parenthetical citation, as in
+        \enquote{\ldots\ is well documented \citep{lamport1994latex}}.
+  \item \cmd{citet}\texttt{\{key\}} for a citation that is part of the
+        sentence, as in \enquote{\citet{knuth1984texbook} describes the
+        typesetting engine}.
+\end{itemize}
+
+\noindent Several keys can be cited together with commas:
+\citep{lamport1994latex,mittelbach2004companion}. Web resources are handled in
+the same way; a good place to start is the \citet{overleaf} tutorial.
+
+A minimal entry looks like this:
+
+\begin{lstlisting}[language={}]
+@book{knuth1984texbook,
+  author    = {Knuth, Donald E.},
+  title     = {The {\TeX}book},
+  publisher = {Addison-Wesley},
+  year      = {1984}
+}
+\end{lstlisting}
+
+\section{The Bibliography}\label{sec:bibliography}
+
+The bibliography is printed at the end of the book by a single line in
+\file{main.tex}:
+
+\begin{lstlisting}[language={[LaTeX]TeX}]
+\bibliography{references}
+\end{lstlisting}
+
+\noindent Citations are numeric by default. To use the author--year style,
+load the style package with an option in \file{main.tex}:
+
+\begin{lstlisting}[language={[LaTeX]TeX}]
+\usepackage[authoryear]{style/booktemplate}
+\end{lstlisting}
+
+\begin{tip}
+If a citation appears as \texttt{[?]}, the bibliography has not been
+processed yet. On Overleaf, recompile; on your computer, run
+\texttt{latexmk main.tex}, which runs BibTeX as needed.
+\end{tip}
+
+\section{Hyperlinks}\label{sec:hyperlinks}
+
+Every cross-reference, citation and table-of-contents entry is a clickable
+link. External addresses are written with \cmd{url} or, with a custom text,
+\cmd{href}: \url{https://ctan.org} or \href{https://ctan.org}{the CTAN
+archive}. Link colours follow the accent colour defined in
+\file{style/booktemplate.sty}.

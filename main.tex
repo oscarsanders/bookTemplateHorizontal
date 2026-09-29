@@ -1,0 +1,76 @@
+%% ==========================================================================
+%%  Landscape Book Template -- main file
+%%
+%%  This file holds the book metadata and the order of its parts.
+%%  Layout, fonts and packages are configured in style/booktemplate.sty.
+%%  See README.md for a full guide.
+%%
+%%  Compile with pdfLaTeX (Overleaf default) followed by BibTeX,
+%%  or simply:  latexmk main.tex
+%% ==========================================================================
+
+%% --- Document class -------------------------------------------------------
+%%  paper=a4,paper=landscape,pagesize  A4 landscape (also sets the PDF size)
+%%  DIV=6                             fixed KOMA type area; the real margins are
+%%                                     set with geometry in the style file
+%%  twocolumn                          two text columns; delete this line for one column
+%%  twoside                            book-style left/right pages
+%%  open=any                           chapters may start on any page
+%%  numbers=noenddot                   "1.1 Title" instead of "1.1. Title"
+%%  bibliography=totoc                 list the bibliography in the contents
+\documentclass[%
+  paper=a4, paper=landscape, pagesize, DIV=6,
+  fontsize=11pt, twoside, open=any,
+  headings=normal, numbers=noenddot, bibliography=totoc,
+  twocolumn
+]{scrbook}
+
+%% --- Style ----------------------------------------------------------------
+%%  Options: numeric (default) or authoryear, e.g.
+%%    \usepackage[authoryear]{style/booktemplate}
+\usepackage{style/booktemplate}
+
+%% --- Metadata -------------------------------------------------------------
+\title{Book Title}
+\subtitle{Subtitle or Short Description}
+\author{Author Name}
+\date{\the\year}
+\publishers{Publisher or Institution}
+
+%% Uncomment to use a shorter title in the page header:
+% \renewcommand*{\runningtitle}{Short Title}
+
+%% Uncomment to number and list subsubsections as well:
+% \setcounter{secnumdepth}{3}
+% \setcounter{tocdepth}{3}
+
+%% Uncomment to compile only some chapters (much faster while writing):
+% \includeonly{chapters/01-getting-started}
+
+\begin{document}
+
+%% --- Front matter ---------------------------------------------------------
+\frontmatter
+\include{frontmatter/titlepage}
+\include{frontmatter/copyright}
+\include{frontmatter/dedication}
+\include{frontmatter/preface}
+\tableofcontents
+
+%% --- Main matter ----------------------------------------------------------
+\mainmatter
+\include{chapters/01-getting-started}
+\include{chapters/02-writing-content}
+\include{chapters/03-figures-tables-code}
+\include{chapters/04-citations-references}
+
+%% --- Appendices -----------------------------------------------------------
+\appendix
+\include{appendices/appendix-a-customization}
+\include{appendices/appendix-b-checklist}
+
+%% --- Back matter ----------------------------------------------------------
+\backmatter
+\bibliography{references}
+
+\end{document}

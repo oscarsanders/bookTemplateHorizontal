@@ -1,0 +1,261 @@
+%% ==========================================================================
+%%  style/booktemplate.sty -- Landscape Book Template
+%%  Version 1.0.0 (2026-09-28)
+%%
+%%  All layout, typography and package configuration lives here so that
+%%  main.tex only contains metadata and the document structure.
+%%
+%%  Requires the KOMA-Script class `scrbook' (loaded in main.tex).
+%%
+%%  Package options
+%%    numeric    numeric citations, e.g. [1, 2]          (default)
+%%    authoryear author-year citations, e.g. (Knuth, 1984)
+%%
+%%  Sections of this file
+%%    1. Options and sanity checks
+%%    2. Language and fonts
+%%    3. Page layout (landscape)
+%%    4. Colours
+%%    5. Headings, captions and lists
+%%    6. Running headers and footers
+%%    7. Tables, figures and mathematics
+%%    8. Callout boxes
+%%    9. Source code listings
+%%   10. Bibliography
+%%   11. Hyperlinks, cross-references and theorem-like environments
+%%   12. Small helper macros
+%% ==========================================================================
+\NeedsTeXFormat{LaTeX2e}[2020/10/01]
+\ProvidesPackage{style/booktemplate}[2026/09/28 v1.0.0 Landscape book template]
+
+%% --------------------------------------------------------------------------
+%% 1. Options and sanity checks
+%% --------------------------------------------------------------------------
+\@ifclassloaded{scrbook}{}{%
+  \PackageError{booktemplate}%
+    {This package requires the scrbook document class}%
+    {Start main.tex with \string\documentclass{scrbook} (see the template).}%
+}
+\newif\if@bt@authoryear
+\DeclareOption{authoryear}{\@bt@authoryeartrue}
+\DeclareOption{numeric}{\@bt@authoryearfalse}
+\ExecuteOptions{numeric}
+\ProcessOptions\relax
+
+%% --------------------------------------------------------------------------
+%% 2. Language and fonts
+%%    Palatino (text + maths), Helvetica (headings) and a scaled Courier
+%%    (code). These come with the PSNFSS core and need no extra installation.
+%%    To switch to Latin Modern, replace the three font lines by
+%%      \RequirePackage{lmodern}
+%% --------------------------------------------------------------------------
+\RequirePackage[T1]{fontenc}
+\RequirePackage[english]{babel}
+\RequirePackage{amsmath,amssymb}      % load before the maths font
+\RequirePackage{mathpazo}             % Palatino text and maths
+\RequirePackage[scaled=0.92]{helvet}  % sans serif
+\linespread{1.05}                     % Palatino looks better with more leading
+
+% Courier scaled to match the x-height of Palatino (family `pcrs').
+\DeclareFontFamily{T1}{pcrs}{\hyphenchar\font=-1 }
+\DeclareFontShape{T1}{pcrs}{m}{n}  {<->s*[0.86]pcrr8t}{}
+\DeclareFontShape{T1}{pcrs}{m}{it} {<->s*[0.86]pcrro8t}{}
+\DeclareFontShape{T1}{pcrs}{m}{sl} {<->ssub*pcrs/m/it}{}
+\DeclareFontShape{T1}{pcrs}{bx}{n} {<->s*[0.86]pcrb8t}{}
+\DeclareFontShape{T1}{pcrs}{bx}{it}{<->s*[0.86]pcrbo8t}{}
+\DeclareFontShape{T1}{pcrs}{b}{n}  {<->ssub*pcrs/bx/n}{}
+\DeclareFontShape{T1}{pcrs}{b}{it} {<->ssub*pcrs/bx/it}{}
+\renewcommand*{\ttdefault}{pcrs}
+
+\RequirePackage{microtype}            % subtle typographic improvements
+\RequirePackage{csquotes}             % \enquote{...} language-aware quotes
+
+%% --------------------------------------------------------------------------
+%% 3. Page layout (landscape A4)
+%%    The paper size is chosen in main.tex (paper=a4,paper=landscape).
+%%    Two-column mode : two comfortable columns per page (default).
+%%    One-column mode : a text block plus a wide outer margin that can hold
+%%                      notes (\marginline{...}). Enable it by removing the
+%%                      `twocolumn' option in main.tex.
+%% --------------------------------------------------------------------------
+
+\if@twocolumn
+  \RequirePackage[%
+    inner=18mm, outer=18mm, top=24mm, bottom=22mm,%
+    headheight=16pt, headsep=7mm, footskip=10mm]{geometry}
+  \setlength{\columnsep}{10mm}
+  \setlength{\columnseprule}{0.3pt}
+\else
+  \RequirePackage[%
+    inner=36mm, textwidth=165mm, top=24mm, bottom=22mm,%
+    headheight=16pt, headsep=7mm, footskip=10mm,%
+    marginparwidth=72mm, marginparsep=8mm]{geometry}
+\fi
+
+%% --------------------------------------------------------------------------
+%% 4. Colours
+%%    Change `accent' to re-colour headings, links, boxes and code rules.
+%% --------------------------------------------------------------------------
+\RequirePackage{xcolor}
+\definecolor{accent}{HTML}{1F4E79}      % main accent (deep blue)
+\definecolor{notecolor}{HTML}{1F4E79}   % note boxes
+\definecolor{tipcolor}{HTML}{2E7D32}    % tip boxes
+\definecolor{warningcolor}{HTML}{B45309}% warning boxes
+\colorlet{codebg}{black!4}              % code background
+\colorlet{codegray}{black!55}           % comments, line numbers, secondary text
+
+%% --------------------------------------------------------------------------
+%% 5. Headings, captions and lists
+%% --------------------------------------------------------------------------
+\setkomafont{disposition}{\sffamily\bfseries\color{accent}}
+\setkomafont{descriptionlabel}{\sffamily\bfseries}
+\setkomafont{chapterentry}{\sffamily\bfseries}
+
+\KOMAoptions{captions=tableheading}     % table captions above, figure below
+\addtokomafont{caption}{\small}
+\addtokomafont{captionlabel}{\sffamily\bfseries\color{accent}}
+
+\RequirePackage[shortlabels]{enumitem}
+\setlist{itemsep=0.15em, topsep=0.4em, parsep=0pt, leftmargin=1.6em}
+
+%% --------------------------------------------------------------------------
+%% 6. Running headers and footers
+%%    Inner header: \runningtitle (defaults to the book title).
+%%    Outer header: current chapter (left pages) or section (right pages).
+%%    Redefine \runningtitle in main.tex to use a shorter title, e.g.
+%%      \renewcommand*{\runningtitle}{Short Title}
+%% --------------------------------------------------------------------------
+% Metadata accessors for use in frontmatter/titlepage.tex
+\newcommand*{\thetitle}{\@title}
+\newcommand*{\thesubtitle}{\@subtitle}
+\newcommand*{\theauthor}{\@author}
+\newcommand*{\thedate}{\@date}
+\newcommand*{\thepublisher}{\@publishers}
+\newcommand*{\runningtitle}{\thetitle}
+\RequirePackage[headsepline]{scrlayer-scrpage}
+\pagestyle{scrheadings}
+\clearpairofpagestyles
+\automark[section]{chapter}
+\ihead{\runningtitle}
+\ohead{\headmark}
+\ofoot[\pagemark]{\pagemark}
+% With open=any, KOMA still forces right-hand pages at \frontmatter and
+% \mainmatter in two-sided documents. Skip those blank pages as well.
+\if@openright\else
+  \renewcommand*{\frontmatter}{\clearpage\@mainmatterfalse\pagenumbering{roman}}
+  \renewcommand*{\mainmatter}{\clearpage\@mainmattertrue\pagenumbering{arabic}}
+  \let\cleardoublepage\clearpage
+\fi
+\setkomafont{pageheadfoot}{\sffamily\footnotesize}
+\setkomafont{pagenumber}{\sffamily\footnotesize\bfseries}
+
+%% --------------------------------------------------------------------------
+%% 7. Tables, figures and mathematics
+%% --------------------------------------------------------------------------
+% `widepage': one-column page inside a two-column book (used for opening pages).
+\newenvironment{widepage}
+  {\if@twocolumn\@restonecoltrue\onecolumn\else\@restonecolfalse\newpage\fi}
+  {\clearpage\if@restonecol\twocolumn\fi}
+% multicol warns when the class option `twocolumn' is active, although it is
+% only used here for the contents page. Load it with an empty option list.
+\let\bt@classopts\@classoptionslist
+\let\@classoptionslist\@empty
+\RequirePackage{multicol}
+\let\@classoptionslist\bt@classopts
+\if@twocolumn   % typeset the contents in two columns as well
+  \BeforeStartingTOC[toc]{\begin{multicols}{2}}
+  \AfterStartingTOC[toc]{\end{multicols}}
+\fi
+\RequirePackage{graphicx}               % \includegraphics
+\RequirePackage{booktabs}               % professional table rules
+\RequirePackage{array,tabularx}         % flexible column types
+\graphicspath{{figures/}}               % \includegraphics{name} finds figures/name
+
+%% --------------------------------------------------------------------------
+%% 8. Callout boxes
+%% --------------------------------------------------------------------------
+\RequirePackage[breakable]{tcolorbox}
+\tcbset{%
+  btcallout/.style 2 args={%
+    breakable, sharp corners, boxrule=0pt, leftrule=2.5pt,%
+    colback=#1!7, colframe=#1,%
+    left=7pt, right=6pt, top=4pt, bottom=4pt,%
+    before skip=0.8\baselineskip, after skip=0.8\baselineskip,%
+    before upper={\setlength{\parindent}{0pt}\setlength{\parskip}{0.4\baselineskip}%
+      \textcolor{#1}{\sffamily\bfseries #2}\ }%
+  }%
+}
+\newtcolorbox{note}{btcallout={notecolor}{Note.}}
+\newtcolorbox{tip}{btcallout={tipcolor}{Tip.}}
+\newtcolorbox{warning}{btcallout={warningcolor}{Warning.}}
+
+%% --------------------------------------------------------------------------
+%% 9. Source code listings
+%%    Choose the language per listing: \begin{lstlisting}[language=Python].
+%% --------------------------------------------------------------------------
+\RequirePackage{scrhack}                % KOMA-Script compatibility layer for listings
+\RequirePackage{listings}
+\lstdefinestyle{booktemplate}{%
+  basicstyle=\ttfamily\small,
+  keywordstyle=\bfseries\color{accent},
+  commentstyle=\itshape\color{codegray},
+  stringstyle=\color{warningcolor},
+  backgroundcolor=\color{codebg},
+  frame=leftline, framerule=2pt, rulecolor=\color{accent},
+  framesep=6pt, xleftmargin=8pt, xrightmargin=0pt,
+  aboveskip=0.8\baselineskip, belowskip=0.6\baselineskip,
+  breaklines=true, breakatwhitespace=false, postbreak=\mbox{\textcolor{codegray}{$\hookrightarrow$}\space},
+  showstringspaces=false, keepspaces=true, tabsize=4, upquote=true,
+  captionpos=b, numbers=none, numberstyle=\tiny\color{codegray}, numbersep=8pt
+}
+\lstset{style=booktemplate}
+
+%% --------------------------------------------------------------------------
+%% 10. Bibliography (natbib + BibTeX)
+%%     Sources go in references.bib; the style is plainnat.
+%% --------------------------------------------------------------------------
+\if@bt@authoryear
+  \RequirePackage[authoryear,round]{natbib}
+\else
+  \RequirePackage[numbers,square,sort&compress]{natbib}
+\fi
+\bibliographystyle{plainnat}
+\addto\captionsenglish{\renewcommand*{\bibname}{References}}
+\setlength{\bibsep}{0.25em}
+
+%% --------------------------------------------------------------------------
+%% 11. Hyperlinks, cross-references and theorem-like environments
+%%     Load hyperref late; cleveref must come after hyperref.
+%% --------------------------------------------------------------------------
+\RequirePackage{url}
+\def\UrlBreaks{\do\/\do\-}          % break paths only at / and -
+\RequirePackage[colorlinks=true, linkcolor=accent, citecolor=accent,%
+  urlcolor=accent, bookmarksnumbered=true, pdfusetitle]{hyperref}
+\RequirePackage{amsthm}                % must be loaded before cleveref
+\RequirePackage[nameinlink,noabbrev]{cleveref}
+\crefname{lstlisting}{listing}{listings}
+\Crefname{lstlisting}{Listing}{Listings}
+
+% Theorem-like environments share one counter, numbered within chapters.
+% They are defined after cleveref so that \cref names each kind correctly.
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[chapter]
+\newtheorem{example}[definition]{Example}
+\newtheorem{exercise}[definition]{Exercise}
+\theoremstyle{plain}
+\newtheorem{theorem}[definition]{Theorem}
+
+%% --------------------------------------------------------------------------
+%% 12. Small helper macros
+%%     \cmd{section}     -> \section   (a LaTeX command name)
+%%     \file{main.tex}   -> main.tex   (file or path, may break across lines)
+%%     \pkg{natbib}      -> natbib     (a package name)
+%%     \code|x = 1|      -> x = 1       (inline code; any delimiter works)
+%% --------------------------------------------------------------------------
+\newcommand*{\cmd}[1]{\texttt{\textbackslash\detokenize{#1}}}
+\DeclareUrlCommand\bt@file{\urlstyle{tt}}
+\DeclareRobustCommand*{\file}{\bt@file}   % robust: safe in captions and headings
+\newcommand*{\pkg}[1]{\textsf{#1}}
+\newcommand*{\code}{\lstinline[breaklines=false]}
+
+\endinput

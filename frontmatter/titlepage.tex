@@ -1,0 +1,25 @@
+%% frontmatter/titlepage.tex
+%% Cover page. Text comes from \title, \subtitle, \author, \date and
+%% \publishers in main.tex. Edit this file freely to redesign the cover.
+\begin{titlepage}
+  \thispagestyle{empty}
+  \raggedright
+  \textcolor{accent}{\rule{\linewidth}{4pt}}\par
+  \vspace*{\fill}
+  {\sffamily\bfseries\color{accent}\fontsize{44}{50}\selectfont \thetitle\par}
+  \vspace{6mm}
+  {\sffamily\fontsize{22}{26}\selectfont\color{black!70} \thesubtitle\par}
+  \vspace*{\fill}
+  \noindent
+  \begin{minipage}[b]{0.6\linewidth}
+    {\sffamily\LARGE \theauthor\par}
+    \vspace{1mm}
+    {\sffamily\large\color{black!70} \thedate\par}
+  \end{minipage}\hfill
+  \begin{minipage}[b]{0.35\linewidth}
+    \raggedleft
+    {\sffamily\large\color{black!70} \thepublisher\par}
+  \end{minipage}\par
+  \vspace{4mm}
+  \textcolor{accent}{\rule{\linewidth}{0.6pt}}
+\end{titlepage}

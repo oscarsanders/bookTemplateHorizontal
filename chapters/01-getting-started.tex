@@ -1,0 +1,90 @@
+%% chapters/01-getting-started.tex
+\chapter{Getting Started}\label{chap:getting-started}
+
+This template produces a landscape A4 book with a professional look and a
+small footprint. This chapter explains how the project is organised, how to
+compile it and how to add your own chapters.
+
+\section{What You Get}
+
+\begin{itemize}
+  \item A landscape A4 page set in two columns, or in one column with a wide
+        margin for notes (see \cref{sec:layout}).
+  \item Front matter, numbered chapters, appendices and a bibliography.
+  \item Callout boxes, theorem-like environments and code listings.
+  \item Clickable cross-references and a linked table of contents.
+  \item Only widely available packages, so the project compiles quickly and
+        works on any \TeX{} distribution.
+\end{itemize}
+
+\section{Project Structure}\label{sec:structure}
+
+The project is split into small files, each with a single purpose
+(\cref{lst:structure}). Keeping the content of each chapter in its own file
+makes the book easier to navigate, review and version-control.
+
+\begin{lstlisting}[language={}, caption={Layout of the project.}, label={lst:structure}, float=tb]
+.
+|-- main.tex            metadata and structure
+|-- references.bib      bibliography database
+|-- style/
+|   `-- booktemplate.sty  layout, fonts, packages
+|-- frontmatter/        preface and opening pages
+|-- chapters/           one file per chapter
+|-- appendices/         one file per appendix
+`-- figures/            images (PDF, PNG, JPG)
+\end{lstlisting}
+
+\begin{note}
+Only \file{main.tex} and \file{style/booktemplate.sty} contain configuration.
+Everything else is content that you are expected to edit or replace.
+\end{note}
+
+\section{Compiling the Book}\label{sec:compiling}
+
+\subsection{On Overleaf}
+
+\begin{enumerate}
+  \item Download the template as a \file{.zip} archive.
+  \item In Overleaf choose \emph{New Project} and then \emph{Upload Project},
+        and select the archive.
+  \item Open the \emph{Menu}, set the compiler to \emph{pdfLaTeX} and the main
+        document to \file{main.tex}.
+  \item Click \emph{Recompile}. Overleaf runs BibTeX automatically.
+\end{enumerate}
+
+\subsection{On Your Computer}
+
+Install a \TeX{} distribution such as \TeX{} Live or MiKTeX and run:
+
+\begin{lstlisting}[language={}]
+latexmk main.tex
+\end{lstlisting}
+
+\noindent The file \file{.latexmkrc} tells \pkg{latexmk} to use pdfLaTeX and to
+run BibTeX when needed.
+
+\section{Adding a Chapter}\label{sec:adding-chapter}
+
+Adding a chapter takes two steps. First, create a new file in the
+\file{chapters/} folder:
+
+\begin{lstlisting}[language={[LaTeX]TeX}]
+% chapters/05-my-chapter.tex
+\chapter{My Chapter}\label{chap:my-chapter}
+
+Your text goes here.
+\end{lstlisting}
+
+\noindent Second, add one line to \file{main.tex}, in the position where the
+chapter should appear:
+
+\begin{lstlisting}[language={[LaTeX]TeX}]
+\include{chapters/05-my-chapter}
+\end{lstlisting}
+
+\begin{tip}
+While writing, uncomment the \cmd{includeonly} line in \file{main.tex} to
+compile only the chapter you are working on. Page numbers, cross-references
+and the contents are preserved from the previous full compilation.
+\end{tip}

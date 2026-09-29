@@ -1,0 +1,43 @@
+%% appendices/appendix-a-customization.tex
+\chapter{Customization Reference}\label{app:customization}
+
+\Cref{tab:customization} lists the settings you are most likely to change and
+where to find them. Options marked \emph{main} are in \file{main.tex};
+options marked \emph{style} are in \file{style/booktemplate.sty}.
+
+\begin{table*}[tb]
+  \centering
+  \caption{Common customizations.}
+  \label{tab:customization}
+  \begin{tabularx}{\textwidth}{@{}lllX@{}}
+    \toprule
+    Setting & File & Command or option & Notes \\
+    \midrule
+    Title, author, date & main  & \cmd{title}, \cmd{author}, \cmd{date} & \\
+    Header title        & main  & \cmd{runningtitle} & Use a short title. \\
+    Columns             & main  & \texttt{twocolumn} & Remove for one column. \\
+    Font size           & main  & \texttt{fontsize=11pt} & 10pt, 11pt or 12pt. \\
+    Chapter opening     & main  & \texttt{open=any} & Use \texttt{right} to start on right pages. \\
+    Numbering depth     & main  & \texttt{secnumdepth} & Also \texttt{tocdepth}. \\
+    Citation style      & main  & \texttt{authoryear} & Option of \pkg{booktemplate}. \\
+    Colours             & style & \texttt{accent} & Section~4 of the file. \\
+    Fonts               & style & \cmd{RequirePackage} & Section~2 of the file. \\
+    Margins             & style & \pkg{geometry} & Section~3 of the file. \\
+    Code appearance     & style & \cmd{lstdefinestyle} & Section~9 of the file. \\
+    \bottomrule
+  \end{tabularx}
+\end{table*}
+
+\section{Changing the Page Format}
+
+The template is designed for A4 landscape. To use US Letter, replace
+\texttt{paper=a4} by \texttt{paper=letter} in \file{main.tex}. Portrait
+orientation is not supported by the default margins: remove
+\texttt{paper=landscape} and adjust the values of \pkg{geometry} in the style
+file.
+
+\section{Changing the Language}
+
+The language is set in Section~2 of the style file. Replace \texttt{english}
+by another \pkg{babel} language, for example \texttt{spanish}, and translate
+the captions of the callout boxes and the word \enquote{References}.
